@@ -84,7 +84,21 @@ type Name struct {
 }
 
 func loadNames() {
-	rp := "src/github.com/mattn/go-gimei/data/names.yml"
+	// For vendoring
+	rp := "github.com/mattn/go-gimei/data/names.yml"
+	if pwd, err := os.Getwd(); err == nil {
+		vendor := filepath.Join(pwd, "vendor")
+		if _, err := os.Stat(vendor); err == nil {
+			f := filepath.Join(vendor, rp)
+			if b, err := ioutil.ReadFile(f); err == nil {
+				if err = yaml.Unmarshal(b, &names); err == nil {
+					return
+				}
+			}
+		}
+	}
+	// For GOPATH
+	rp = filepath.Join("src", rp)
 	for _, p := range filepath.SplitList(os.Getenv("GOPATH")) {
 		f := filepath.Join(p, rp)
 		if _, err := os.Stat(f); err == nil {
@@ -223,7 +237,21 @@ type Address struct {
 }
 
 func loadAddresses() {
-	rp := "src/github.com/mattn/go-gimei/data/addresses.yml"
+	// For vendoring
+	rp := "github.com/mattn/go-gimei/data/addresses.yml"
+	if pwd, err := os.Getwd(); err == nil {
+		vendor := filepath.Join(pwd, "vendor")
+		if _, err := os.Stat(vendor); err == nil {
+			f := filepath.Join(vendor, rp)
+			if b, err := ioutil.ReadFile(f); err == nil {
+				if err = yaml.Unmarshal(b, &addresses); err == nil {
+					return
+				}
+			}
+		}
+	}
+	// For GOPATH
+	rp = filepath.Join("src", rp)
 	for _, p := range filepath.SplitList(os.Getenv("GOPATH")) {
 		f := filepath.Join(p, rp)
 		if _, err := os.Stat(f); err == nil {
